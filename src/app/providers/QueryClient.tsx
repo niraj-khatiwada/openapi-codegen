@@ -8,7 +8,7 @@ import {
 import { client } from "@/api/gen/services.gen";
 
 client.setConfig({
-  baseUrl: "http://localhost:8000",
+  baseUrl: process.env.NEXT_PUBLIC_API_URL,
 });
 
 const queryClient = new QueryClient({
