@@ -7,7 +7,7 @@ See [this](https://github.com/niraj-khatiwada/nestjs-starter-template) repo for 
 1. Point your OpenAPI schema.json file in `.env`
 
 ```
-NEXT_PUBLIC_API_URL=
+NEXT_PUBLIC_API_URL=http://localhost:8000/swagger/json
 ```
 
 2. Generate the queries and schema
