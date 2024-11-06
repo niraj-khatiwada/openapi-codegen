@@ -6,6 +6,14 @@ import {
   type Options,
 } from "@hey-api/client-fetch";
 import {
+  type HealthControllerCheckError,
+  type HealthControllerCheckResponse,
+  type AuthControllerSignInData,
+  type AuthControllerSignInError,
+  type AuthControllerSignInResponse,
+  type AuthControllerRegisterData,
+  type AuthControllerRegisterError,
+  type AuthControllerRegisterResponse,
   type UserControllerGetCurrentUserError,
   type UserControllerGetCurrentUserResponse,
   type UserControllerCreateUserData,
@@ -17,21 +25,69 @@ import {
   type UserControllerLoadMoreUsersData,
   type UserControllerLoadMoreUsersError,
   type UserControllerLoadMoreUsersResponse,
-  type HealthControllerCheckError,
-  type HealthControllerCheckResponse,
-  type AuthControllerSignInData,
-  type AuthControllerSignInError,
-  type AuthControllerSignInResponse,
-  type AuthControllerRegisterData,
-  type AuthControllerRegisterError,
-  type AuthControllerRegisterResponse,
-  type HomeControllerHomeError,
-  type HomeControllerHomeResponse,
+  type UserControllerFindUserData,
+  type UserControllerFindUserError,
+  type UserControllerFindUserResponse,
+  type UserControllerUpdateUserData,
+  type UserControllerUpdateUserError,
+  type UserControllerUpdateUserResponse,
+  type UserControllerRemoveUserData,
+  type UserControllerRemoveUserError,
+  type UserControllerRemoveUserResponse,
+  type UserControllerChangePasswordError,
+  type UserControllerChangePasswordResponse,
   UserControllerGetCurrentUserResponseTransformer,
   UserControllerCreateUserResponseTransformer,
+  UserControllerFindUserResponseTransformer,
+  UserControllerUpdateUserResponseTransformer,
 } from "./types.gen";
 
 export const client = createClient(createConfig());
+
+/**
+ * Health check
+ */
+export const healthControllerCheck = <ThrowOnError extends boolean = false>(
+  options?: Options<unknown, ThrowOnError>,
+) => {
+  return (options?.client ?? client).get<
+    HealthControllerCheckResponse,
+    HealthControllerCheckError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/health",
+  });
+};
+
+/**
+ * Sign in
+ */
+export const authControllerSignIn = <ThrowOnError extends boolean = false>(
+  options: Options<AuthControllerSignInData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).post<
+    AuthControllerSignInResponse,
+    AuthControllerSignInError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/auth/email/login",
+  });
+};
+
+export const authControllerRegister = <ThrowOnError extends boolean = false>(
+  options: Options<AuthControllerRegisterData, ThrowOnError>,
+) => {
+  return (options?.client ?? client).post<
+    AuthControllerRegisterResponse,
+    AuthControllerRegisterError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/auth/email/register",
+  });
+};
 
 /**
  * Get current user
@@ -106,62 +162,66 @@ export const userControllerLoadMoreUsers = <
 };
 
 /**
- * Health check
+ * Find user by id
  */
-export const healthControllerCheck = <ThrowOnError extends boolean = false>(
-  options?: Options<unknown, ThrowOnError>,
+export const userControllerFindUser = <ThrowOnError extends boolean = false>(
+  options: Options<UserControllerFindUserData, ThrowOnError>,
 ) => {
   return (options?.client ?? client).get<
-    HealthControllerCheckResponse,
-    HealthControllerCheckError,
+    UserControllerFindUserResponse,
+    UserControllerFindUserError,
     ThrowOnError
   >({
     ...options,
-    url: "/health",
+    url: "/api/v1/users/{id}",
+    responseTransformer: UserControllerFindUserResponseTransformer,
   });
 };
 
 /**
- * Sign in
+ * Update user
  */
-export const authControllerSignIn = <ThrowOnError extends boolean = false>(
-  options: Options<AuthControllerSignInData, ThrowOnError>,
+export const userControllerUpdateUser = <ThrowOnError extends boolean = false>(
+  options: Options<UserControllerUpdateUserData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).post<
-    AuthControllerSignInResponse,
-    AuthControllerSignInError,
+  return (options?.client ?? client).patch<
+    UserControllerUpdateUserResponse,
+    UserControllerUpdateUserError,
     ThrowOnError
   >({
     ...options,
-    url: "/api/v1/auth/email/login",
-  });
-};
-
-export const authControllerRegister = <ThrowOnError extends boolean = false>(
-  options: Options<AuthControllerRegisterData, ThrowOnError>,
-) => {
-  return (options?.client ?? client).post<
-    AuthControllerRegisterResponse,
-    AuthControllerRegisterError,
-    ThrowOnError
-  >({
-    ...options,
-    url: "/api/v1/auth/email/register",
+    url: "/api/v1/users/{id}",
+    responseTransformer: UserControllerUpdateUserResponseTransformer,
   });
 };
 
 /**
- * Home
+ * Delete user
  */
-export const homeControllerHome = <ThrowOnError extends boolean = false>(
-  options?: Options<unknown, ThrowOnError>,
+export const userControllerRemoveUser = <ThrowOnError extends boolean = false>(
+  options: Options<UserControllerRemoveUserData, ThrowOnError>,
 ) => {
-  return (options?.client ?? client).get<
-    HomeControllerHomeResponse,
-    HomeControllerHomeError,
+  return (options?.client ?? client).delete<
+    UserControllerRemoveUserResponse,
+    UserControllerRemoveUserError,
     ThrowOnError
   >({
     ...options,
-    url: "/",
+    url: "/api/v1/users/{id}",
+  });
+};
+
+export const userControllerChangePassword = <
+  ThrowOnError extends boolean = false,
+>(
+  options?: Options<unknown, ThrowOnError>,
+) => {
+  return (options?.client ?? client).post<
+    UserControllerChangePasswordResponse,
+    UserControllerChangePasswordError,
+    ThrowOnError
+  >({
+    ...options,
+    url: "/api/v1/users/me/change-password",
   });
 };

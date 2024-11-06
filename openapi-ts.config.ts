@@ -1,11 +1,12 @@
 import { defineConfig } from "@hey-api/openapi-ts";
+import "dotenv/config";
 
 export default defineConfig({
   client: "@hey-api/client-fetch",
   input: `${process.env.NEXT_PUBLIC_API_URL}/swagger/json`,
   output: {
     format: "prettier",
-    path: "./src/@api/gen",
+    path: "./src/api/gen",
   },
   types: {
     dates: "types+transform",

@@ -9,16 +9,25 @@ import {
 } from "@tanstack/react-query";
 import {
   client,
+  healthControllerCheck,
+  authControllerSignIn,
+  authControllerRegister,
   userControllerGetCurrentUser,
   userControllerCreateUser,
   userControllerFindAllUsers,
   userControllerLoadMoreUsers,
-  healthControllerCheck,
-  authControllerSignIn,
-  authControllerRegister,
-  homeControllerHome,
+  userControllerFindUser,
+  userControllerUpdateUser,
+  userControllerRemoveUser,
+  userControllerChangePassword,
 } from "../services.gen";
 import type {
+  AuthControllerSignInData,
+  AuthControllerSignInError,
+  AuthControllerSignInResponse,
+  AuthControllerRegisterData,
+  AuthControllerRegisterError,
+  AuthControllerRegisterResponse,
   UserControllerCreateUserData,
   UserControllerCreateUserError,
   UserControllerCreateUserResponse,
@@ -26,12 +35,15 @@ import type {
   UserControllerFindAllUsersError,
   UserControllerFindAllUsersResponse,
   UserControllerLoadMoreUsersData,
-  AuthControllerSignInData,
-  AuthControllerSignInError,
-  AuthControllerSignInResponse,
-  AuthControllerRegisterData,
-  AuthControllerRegisterError,
-  AuthControllerRegisterResponse,
+  UserControllerFindUserData,
+  UserControllerUpdateUserData,
+  UserControllerUpdateUserError,
+  UserControllerUpdateUserResponse,
+  UserControllerRemoveUserData,
+  UserControllerRemoveUserError,
+  UserControllerRemoveUserResponse,
+  UserControllerChangePasswordError,
+  UserControllerChangePasswordResponse,
 } from "../types.gen";
 
 type QueryKey<TOptions extends Options> = [
@@ -66,6 +78,104 @@ const createQueryKey = <TOptions extends Options>(
     params.query = options.query;
   }
   return params;
+};
+
+export const healthControllerCheckQueryKey = (options?: Options) => [
+  createQueryKey("healthControllerCheck", options),
+];
+
+export const healthControllerCheckOptions = (options?: Options) => {
+  return queryOptions({
+    queryFn: async ({ queryKey }) => {
+      const { data } = await healthControllerCheck({
+        ...options,
+        ...queryKey[0],
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: healthControllerCheckQueryKey(options),
+  });
+};
+
+export const authControllerSignInQueryKey = (
+  options: Options<AuthControllerSignInData>,
+) => [createQueryKey("authControllerSignIn", options)];
+
+export const authControllerSignInOptions = (
+  options: Options<AuthControllerSignInData>,
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey }) => {
+      const { data } = await authControllerSignIn({
+        ...options,
+        ...queryKey[0],
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: authControllerSignInQueryKey(options),
+  });
+};
+
+export const authControllerSignInMutation = (
+  options?: Partial<Options<AuthControllerSignInData>>,
+) => {
+  const mutationOptions: UseMutationOptions<
+    AuthControllerSignInResponse,
+    AuthControllerSignInError,
+    Options<AuthControllerSignInData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await authControllerSignIn({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const authControllerRegisterQueryKey = (
+  options: Options<AuthControllerRegisterData>,
+) => [createQueryKey("authControllerRegister", options)];
+
+export const authControllerRegisterOptions = (
+  options: Options<AuthControllerRegisterData>,
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey }) => {
+      const { data } = await authControllerRegister({
+        ...options,
+        ...queryKey[0],
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: authControllerRegisterQueryKey(options),
+  });
+};
+
+export const authControllerRegisterMutation = (
+  options?: Partial<Options<AuthControllerRegisterData>>,
+) => {
+  const mutationOptions: UseMutationOptions<
+    AuthControllerRegisterResponse,
+    AuthControllerRegisterError,
+    Options<AuthControllerRegisterData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await authControllerRegister({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
 };
 
 export const userControllerGetCurrentUserQueryKey = (options?: Options) => [
@@ -248,54 +358,36 @@ export const userControllerLoadMoreUsersOptions = (
   });
 };
 
-export const healthControllerCheckQueryKey = (options?: Options) => [
-  createQueryKey("healthControllerCheck", options),
-];
+export const userControllerFindUserQueryKey = (
+  options: Options<UserControllerFindUserData>,
+) => [createQueryKey("userControllerFindUser", options)];
 
-export const healthControllerCheckOptions = (options?: Options) => {
-  return queryOptions({
-    queryFn: async ({ queryKey }) => {
-      const { data } = await healthControllerCheck({
-        ...options,
-        ...queryKey[0],
-        throwOnError: true,
-      });
-      return data;
-    },
-    queryKey: healthControllerCheckQueryKey(options),
-  });
-};
-
-export const authControllerSignInQueryKey = (
-  options: Options<AuthControllerSignInData>,
-) => [createQueryKey("authControllerSignIn", options)];
-
-export const authControllerSignInOptions = (
-  options: Options<AuthControllerSignInData>,
+export const userControllerFindUserOptions = (
+  options: Options<UserControllerFindUserData>,
 ) => {
   return queryOptions({
     queryFn: async ({ queryKey }) => {
-      const { data } = await authControllerSignIn({
+      const { data } = await userControllerFindUser({
         ...options,
         ...queryKey[0],
         throwOnError: true,
       });
       return data;
     },
-    queryKey: authControllerSignInQueryKey(options),
+    queryKey: userControllerFindUserQueryKey(options),
   });
 };
 
-export const authControllerSignInMutation = (
-  options?: Partial<Options<AuthControllerSignInData>>,
+export const userControllerUpdateUserMutation = (
+  options?: Partial<Options<UserControllerUpdateUserData>>,
 ) => {
   const mutationOptions: UseMutationOptions<
-    AuthControllerSignInResponse,
-    AuthControllerSignInError,
-    Options<AuthControllerSignInData>
+    UserControllerUpdateUserResponse,
+    UserControllerUpdateUserError,
+    Options<UserControllerUpdateUserData>
   > = {
     mutationFn: async (localOptions) => {
-      const { data } = await authControllerSignIn({
+      const { data } = await userControllerUpdateUser({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -306,36 +398,16 @@ export const authControllerSignInMutation = (
   return mutationOptions;
 };
 
-export const authControllerRegisterQueryKey = (
-  options: Options<AuthControllerRegisterData>,
-) => [createQueryKey("authControllerRegister", options)];
-
-export const authControllerRegisterOptions = (
-  options: Options<AuthControllerRegisterData>,
-) => {
-  return queryOptions({
-    queryFn: async ({ queryKey }) => {
-      const { data } = await authControllerRegister({
-        ...options,
-        ...queryKey[0],
-        throwOnError: true,
-      });
-      return data;
-    },
-    queryKey: authControllerRegisterQueryKey(options),
-  });
-};
-
-export const authControllerRegisterMutation = (
-  options?: Partial<Options<AuthControllerRegisterData>>,
+export const userControllerRemoveUserMutation = (
+  options?: Partial<Options<UserControllerRemoveUserData>>,
 ) => {
   const mutationOptions: UseMutationOptions<
-    AuthControllerRegisterResponse,
-    AuthControllerRegisterError,
-    Options<AuthControllerRegisterData>
+    UserControllerRemoveUserResponse,
+    UserControllerRemoveUserError,
+    Options<UserControllerRemoveUserData>
   > = {
     mutationFn: async (localOptions) => {
-      const { data } = await authControllerRegister({
+      const { data } = await userControllerRemoveUser({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -346,20 +418,40 @@ export const authControllerRegisterMutation = (
   return mutationOptions;
 };
 
-export const homeControllerHomeQueryKey = (options?: Options) => [
-  createQueryKey("homeControllerHome", options),
+export const userControllerChangePasswordQueryKey = (options?: Options) => [
+  createQueryKey("userControllerChangePassword", options),
 ];
 
-export const homeControllerHomeOptions = (options?: Options) => {
+export const userControllerChangePasswordOptions = (options?: Options) => {
   return queryOptions({
     queryFn: async ({ queryKey }) => {
-      const { data } = await homeControllerHome({
+      const { data } = await userControllerChangePassword({
         ...options,
         ...queryKey[0],
         throwOnError: true,
       });
       return data;
     },
-    queryKey: homeControllerHomeQueryKey(options),
+    queryKey: userControllerChangePasswordQueryKey(options),
   });
+};
+
+export const userControllerChangePasswordMutation = (
+  options?: Partial<Options>,
+) => {
+  const mutationOptions: UseMutationOptions<
+    UserControllerChangePasswordResponse,
+    UserControllerChangePasswordError,
+    Options
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await userControllerChangePassword({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
 };
