@@ -15,7 +15,7 @@ NEXT_PUBLIC_API_URL=http://localhost:8000/swagger/json
 ```
 pnpm codegen
 ```
-Your generated API will be available [here](./src/api/gen)
+Your generated API will be available [here](./src/api/gen).
 Now, you just import the queries/mutations in your [app](./src/app/page.tsx)
 
 3. Start your server
