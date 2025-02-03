@@ -15,6 +15,7 @@ NEXT_PUBLIC_API_URL=http://localhost:8000/swagger/json
 ```
 pnpm codegen
 ```
+Your generated API will be available [here](./src/api/gen)
 
 3. Start your server
 
